@@ -1,0 +1,42 @@
+General Structure
+The current project structure as follows:
+
+├── app.ts              // Main entry point to initialize the application.
+├── bootstrap.ts        // Contains logic for bootstrapping the app.
+├── config              // Configuration files for the application.
+│   ├── default.ts      // Default configuration settings (e.g., database, API keys, etc.).
+│   ├── environment.ts  // Environment-specific settings (e.g., development, production).
+│   └── index.ts        // Centralized configuration export for easy access.
+├── core                // Core application logic and business modules.
+│   ├── controllers     // Express route handlers (e.g., CRUD logic for resources).
+│   ├── models          // TypeORM entity definitions representing database tables.
+│   ├── repositories    // Data access layer for interacting with the database.
+│   ├── routes          // API route definitions, organized by resource.
+│   ├── services        // Business logic and service layer (e.g., data processing, integrations).
+│   └── validations     // Schema validations (e.g., using Zod or class-validator).
+├── docs                // Documentation for the project.
+│   ├── api             // API documentation (e.g., OpenAPI/Swagger specs).
+│   ├── architecture    // High-level architectural design documents.
+│   ├── contributing    // Guidelines for contributing to the project.
+│   ├── development     // Developer setup and usage instructions.
+│   └── static          // Static assets for documentation (e.g., images, diagrams).
+├── LICENSE             // Open-source license for the project.
+├── package.json        // npm package definition, including dependencies and scripts.
+├── plugins             // Custom plugins or extensions for the CMS.
+│   └── README.md       // Documentation for plugins and how to build them.
+├── README.md           // Main project README with overview and instructions.
+├── scripts             // Utility scripts for development or deployment.
+│   └── start-dev.ts    // Script to start the application in development mode.
+├── shared              // Shared utilities and components across the app.
+│   ├── middlewares     // Reusable Express middleware (e.g., authentication, logging).
+│   ├── services        // Common services (e.g., email, caching, etc.).
+│   ├── types           // TypeScript type definitions and interfaces.
+│   └── utils           // General utility functions and helpers.
+├── tests               // Test files (unit, integration, and e2e).
+├── tsconfig.json       // TypeScript configuration file.
+└── views               // View templates for the CMS (if applicable).
+    ├── admin           // Templates for the admin interface.
+    ├── error.ejs       // Template for error pages.
+    ├── index.ejs       // Main landing page template.
+    ├── layouts         // Shared layout templates.
+    └── partials        // Reusable view components (e.g., header, footer).

@@ -1,0 +1,8 @@
+1. The current project structure as follows
+2. What is TypeORM entity classes
+3. Key concepts in TypeORM entity classes
+4. Authentication - user, session, role
+5. Authorizarion - menu, rolemenu, authority
+6. Payment and billing
+7. Logging
+8. API Manager
