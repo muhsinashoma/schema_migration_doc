@@ -10,8 +10,9 @@
 6. Payment and billing
 7. Logging
 8. API Manager
-9. Dependencies
-10. Database Migration Category
+9. Content Information
+10. Dependencies
+11. Database Migration Category
 
  #### 1. What is TypeORM entity classes    
 ---
@@ -743,6 +744,158 @@ npm run migration:run
 
 npm run migration:revert
 ```  
+#### Content Information/Details 
+---
+```TypeScript
+// core/models/content.entity.ts
+import { Entity, PrimaryColumn, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
+import { ContentCategory } from './content-category.entity';
+import { ContentTag } from './content-tag.entity';
+import { ContentComment } from './content-comment.entity';
+import { User } from './user.entity';
+
+@Entity('Contents')
+export class Content {
+    @PrimaryColumn({ type: 'varchar', length: 50 })
+    content_id: string;
+
+    @Column({ type: 'varchar', length: 255 })
+    title: string;
+
+    @Column({ type: 'text' })
+    body: string;
+
+    @Column({ type: 'varchar', length: 255, nullable: true })
+    slug: string;
+
+    @Column({ type: 'varchar', length: 100, nullable: true })
+    excerpt: string;
+
+    @Column({ type: 'varchar', length: 255, nullable: true })
+    featured_image: string;
+
+    @Column({ type: 'varchar', length: 20, default: 'draft' })
+    status: string;
+
+    @Column({ type: 'boolean', default: false })
+    is_featured: boolean;
+
+    @Column({ type: 'int', default: 0 })
+    view_count: number;
+
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    created_at: Date;
+
+    @Column({ type: 'timestamp', nullable: true })
+    updated_at: Date;
+
+    @Column({ type: 'varchar', length: 50 })
+    created_by: string;
+
+    @ManyToOne(() => User, user => user.contents)
+    @JoinColumn({ name: 'created_by' })
+    user: User;
+
+    @OneToMany(() => ContentTag, contentTag => contentTag.content)
+    contentTags: ContentTag[];
+
+    @OneToMany(() => ContentComment, contentComment => contentComment.content)
+    contentComments: ContentComment[];
+
+    @ManyToOne(() => ContentCategory, category => category.contents)
+    @JoinColumn({ name: 'category_id' })
+    category: ContentCategory;
+
+    @Column({ type: 'varchar', length: 50 })
+    category_id: string;
+}
+
+// core/models/content-category.entity.ts
+@Entity('ContentCategories')
+export class ContentCategory {
+    @PrimaryColumn({ type: 'varchar', length: 50 })
+    category_id: string;
+
+    @Column({ type: 'varchar', length: 100 })
+    name: string;
+
+    @Column({ type: 'varchar', length: 255, nullable: true })
+    description: string;
+
+    @Column({ type: 'varchar', length: 100, nullable: true })
+    slug: string;
+
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    created_at: Date;
+
+    @Column({ type: 'timestamp', nullable: true })
+    updated_at: Date;
+
+    @Column({ type: 'varchar', length: 50 })
+    created_by: string;
+
+    @ManyToOne(() => User, user => user.contentCategories)
+    @JoinColumn({ name: 'created_by' })
+    user: User;
+
+    @OneToMany(() => Content, content => content.category)
+    contents: Content[];
+}
+
+// core/models/content-tag.entity.ts
+@Entity('ContentTags')
+export class ContentTag {
+    @PrimaryColumn({ type: 'varchar', length: 50 })
+    content_id: string;
+
+    @PrimaryColumn({ type: 'varchar', length: 50 })
+    tag_id: string;
+
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    created_at: Date;
+
+    @Column({ type: 'varchar', length: 50 })
+    created_by: string;
+
+    @ManyToOne(() => Content, content => content.contentTags)
+    @JoinColumn({ name: 'content_id' })
+    content: Content;
+
+    @ManyToOne(() => User, user => user.contentTags)
+    @JoinColumn({ name: 'created_by' })
+    user: User;
+}
+
+// core/models/content-comment.entity.ts
+@Entity('ContentComments')
+export class ContentComment {
+    @PrimaryColumn({ type: 'varchar', length: 50 })
+    comment_id: string;
+
+    @Column({ type: 'varchar', length: 50 })
+    content_id: string;
+
+    @Column({ type: 'text' })
+    comment: string;
+
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    created_at: Date;
+
+    @Column({ type: 'timestamp', nullable: true })
+    updated_at: Date;
+
+    @Column({ type: 'varchar', length: 50 })
+    created_by: string;
+
+    @ManyToOne(() => Content, content => content.contentComments)
+    @JoinColumn({ name: 'content_id' })
+    content: Content;
+
+    @ManyToOne(() => User, user => user.contentComments)
+    @JoinColumn({ name: 'created_by' })
+    user: User;
+}
+```  
 
 #### Dependencies  
 --- 
@@ -752,7 +905,6 @@ npm install typeorm reflect-metadata @types/node typescript ts-node mysql2
 
 2. Development dependencies  
 npm install -D @types/node @types/reflect-metadata typescript ts-node
-
 
 
 #### Database Migration Category  
